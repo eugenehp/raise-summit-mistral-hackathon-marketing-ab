@@ -2200,6 +2200,7 @@ dependencies = [
 name = "marketing"
 version = "0.0.0"
 dependencies = [
+ "anyhow",
  "llama-cpp-2",
  "pdf-extract",
  "serde",

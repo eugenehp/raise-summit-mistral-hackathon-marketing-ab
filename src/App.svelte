@@ -44,12 +44,25 @@
     response =
       paragraphResponse + "\n\n========================\n\n" + response;
   };
+
+  const generate_budget = async () => {
+    isLoading = true;
+
+    const short = text.substring(0, 1000);
+    const prompt = `"Generate a budget breakdown for the marketing campaign:\n\nMarketing brief:\n${short}...\n\nBreakdown:\n\n $"`;
+
+    const result = await invoke("get_answer", { prompt });
+    isLoading = false;
+
+    response = result + "\n\n========================\n\n" + response;
+  };
 </script>
 
 <main class=" flex flex-col mx-auto w-screen">
   {#if !isLoading}
-    <div class="flex flex-row w-screen justify-center mt-2">
+    <div class="flex flex-row w-screen justify-center mt-2 space-x-2">
       <button on:click={() => openFile()}>Open brief</button>
+      <button on:click={() => generate_budget()}>Get budget</button>
     </div>
   {/if}
 

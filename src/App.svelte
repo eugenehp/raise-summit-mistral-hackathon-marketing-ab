@@ -8,7 +8,7 @@
 
   let fileResponse: FileResponse | null = null;
   let response: String = "";
-  let text:String = "";
+  let text: String = "";
   let isLoading = false;
 
   const openFile = async () => {
@@ -32,34 +32,55 @@
     }
   };
 
-  const generate_prompt_example = (text:string)
+  const generate_prompt_example = async (paragraph: string) => {
+    isLoading = true;
+
+    const short = text.substring(0, 1000);
+    const prompt = `"Your task is to create a prompt to generate an image for this action item:\n\n${paragraph}\n\nMarketing brief:\n${short}...\n\nResult:\n\n"`;
+
+    const paragraphResponse = await invoke("get_answer", { prompt });
+    isLoading = false;
+
+    response =
+      paragraphResponse + "\n\n========================\n\n" + response;
+  };
 </script>
 
-<main class="container">
-  <h1>Marketing A/B</h1>
-
+<main class=" flex flex-col mx-auto w-screen">
   {#if !isLoading}
-    <button on:click={() => openFile()}>Open brief</button>
+    <div class="flex flex-row w-screen justify-center mt-2">
+      <button on:click={() => openFile()}>Open brief</button>
+    </div>
   {/if}
 
   {#if fileResponse}
-    <div>Uploaded file: {fileResponse.name}</div>
+    <div class="flex flex-row w-screen justify-center">
+      Uploaded file: {fileResponse.name}
+    </div>
   {/if}
 
-  <pre>{response}</pre>
-
   {#if isLoading}
-    <div class="centered">
+    <div class="flex flex-row justify-center items-center m-4">
       <Circle size="60" color="#FF3E00" unit="px" duration="1s" />
     </div>
   {/if}
-</main>
 
-<style>
-  .centered {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    justify-items: center;
-  }
-</style>
+  <!-- <pre>{response}</pre> -->
+  {#if response.length > 0}
+    <div class="flex flex-col justify-center">
+      {#each response
+        .split("\n\n")
+        .filter((a) => a.length > 0) as paragraph, index}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <div
+          class="hover:bg-blue-100 flex flex-row justify-center"
+          on:click={() => generate_prompt_example(paragraph)}
+        >
+          {paragraph}
+        </div>
+      {/each}
+    </div>
+  {/if}
+</main>

@@ -163,9 +163,9 @@ pub fn run_mistral(prompt: String) -> Result<String> {
 
     // eprintln!("\n");
 
-    println!("=====================");
-    println!("{answer}");
-    println!("=====================");
+    // println!("=====================");
+    // println!("{answer}");
+    // println!("=====================");
 
     Ok(answer)
 }

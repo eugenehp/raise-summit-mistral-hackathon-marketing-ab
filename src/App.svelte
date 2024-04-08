@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { invoke } from "@tauri-apps/api/core";
   import { getCurrent } from "@tauri-apps/api/window";
   import { open, type FileResponse } from "@tauri-apps/plugin-dialog";
 
@@ -12,6 +13,11 @@
       multiple: false,
       directory: false,
     });
+
+    if (fileResponse) {
+      const { path } = fileResponse;
+      const response = await invoke("get_pdf", { path });
+    }
   };
 </script>
 
